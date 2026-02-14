@@ -1,0 +1,40 @@
+{
+  "name": "perdiem-coding-challenge",
+  "version": "1.0.0",
+  "description": "Full-stack restaurant menu application with Square API integration",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd backend && npm run dev",
+    "client:dev": "cd frontend && npm run dev",
+    "build": "npm run server:build && npm run client:build",
+    "server:build": "cd backend && npm run build",
+    "client:build": "cd frontend && npm run build",
+    "start": "cd backend && npm start",
+    "test": "npm run server:test && npm run client:test",
+    "server:test": "cd backend && npm test",
+    "client:test": "cd frontend && npm test",
+    "lint": "npm run server:lint && npm run client:lint",
+    "server:lint": "cd backend && npm run lint",
+    "client:lint": "cd frontend && npm run lint",
+    "prisma:migrate": "cd backend && npm run prisma:migrate",
+    "prisma:generate": "cd backend && npm run prisma:generate",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "restaurant",
+    "menu",
+    "square-api",
+    "react",
+    "nodejs",
+    "typescript",
+    "prisma",
+    "postgresql"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

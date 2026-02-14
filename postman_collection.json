@@ -1,0 +1,217 @@
+{
+  "info": {
+    "name": "Per Diem Restaurant Menu API",
+    "description": "API endpoints for testing the Per Diem restaurant menu application with Square integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "health"]
+        },
+        "description": "Check if the API server is running and healthy"
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Locations",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/locations",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "locations"]
+        },
+        "description": "Fetch all active locations from Square API"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/locations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "locations"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"id\": \"LOCATION_ID\",\n    \"name\": \"Main Street Cafe\",\n    \"address\": \"123 Main St, San Francisco, CA, 94102\",\n    \"timezone\": \"America/Los_Angeles\",\n    \"status\": \"ACTIVE\"\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "Get Catalog Items by Location",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/catalog?location_id={{locationId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "catalog"],
+          "query": [
+            {
+              "key": "location_id",
+              "value": "{{locationId}}",
+              "description": "The Square location ID"
+            }
+          ]
+        },
+        "description": "Fetch catalog items grouped by category for a specific location"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/catalog?locationId={{locationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "catalog"],
+              "query": [
+                {
+                  "key": "locationId",
+                  "value": "{{locationId}}"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"Appetizers\": [\n    {\n      \"id\": \"ITEM_ID_1\",\n      \"name\": \"Spring Rolls\",\n      \"description\": \"Fresh vegetable spring rolls with peanut sauce\",\n      \"category\": \"Appetizers\",\n      \"image_url\": null,\n      \"variations\": [\n        {\n          \"name\": \"Regular\",\n          \"price\": 850\n        }\n      ]\n    }\n  ],\n  \"Main Course\": [\n    {\n      \"id\": \"ITEM_ID_2\",\n      \"name\": \"Grilled Salmon\",\n      \"description\": \"Fresh Atlantic salmon with seasonal vegetables\",\n      \"category\": \"Main Course\",\n      \"image_url\": null,\n      \"variations\": [\n        {\n          \"name\": \"Regular\",\n          \"price\": 2200\n        }\n      ]\n    }\n  ]\n}"
+        },
+        {
+          "name": "Missing Location ID",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/catalog",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "catalog"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"error\": \"Location ID is required\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Categories by Location",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/catalog/categories?location_id={{locationId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "catalog", "categories"],
+          "query": [
+            {
+              "key": "location_id",
+              "value": "{{locationId}}",
+              "description": "The Square location ID"
+            }
+          ]
+        },
+        "description": "Fetch all categories with item counts for a specific location"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/catalog/categories?locationId={{locationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "catalog", "categories"],
+              "query": [
+                {
+                  "key": "locationId",
+                  "value": "{{locationId}}"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"id\": \"appetizers\",\n    \"name\": \"Appetizers\",\n    \"item_count\": 5\n  },\n  {\n    \"id\": \"main-course\",\n    \"name\": \"Main Course\",\n    \"item_count\": 8\n  },\n  {\n    \"id\": \"desserts\",\n    \"name\": \"Desserts\",\n    \"item_count\": 6\n  },\n  {\n    \"id\": \"beverages\",\n    \"name\": \"Beverages\",\n    \"item_count\": 10\n  }\n]"
+        },
+        {
+          "name": "Missing Location ID",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/catalog/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "catalog", "categories"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"error\": \"Location ID is required\"\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "locationId",
+      "value": "L7YYS4YN7JS5K",
+      "type": "string",
+      "description": "Default location: hosh"
+    }
+  ]
+}
