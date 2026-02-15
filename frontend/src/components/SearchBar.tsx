@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, X } from 'lucide-react';
-import { clsx } from '@/utils/helpers';
+import { clsx, debounce } from '@/utils/helpers';
 
 interface SearchBarProps {
   query: string;
@@ -15,7 +15,36 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = 'Search for dishes...',
   className,
 }) => {
+  // Local state for immediate visual feedback
+  const [localQuery, setLocalQuery] = useState(query);
+  const isTypingRef = useRef(false);
+
+  // Debounced callback for actual search
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      onQueryChange(value);
+      isTypingRef.current = false;
+    }, 300),
+    [onQueryChange]
+  );
+
+  // Sync local state with prop only when not actively typing
+  useEffect(() => {
+    if (!isTypingRef.current && query !== localQuery) {
+      setLocalQuery(query);
+    }
+  }, [query]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    isTypingRef.current = true;
+    setLocalQuery(value); // Immediate visual feedback
+    debouncedSearch(value); // Debounced search
+  };
+
   const handleClear = () => {
+    isTypingRef.current = false;
+    setLocalQuery('');
     onQueryChange('');
   };
 
@@ -33,8 +62,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <input
           id="search-input"
           type="text"
-          value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
+          value={localQuery}
+          onChange={handleChange}
           placeholder={placeholder}
           className="w-full pl-12 pr-12 py-3.5 
                    bg-white dark:bg-gray-800 
@@ -49,7 +78,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                    text-base"
           aria-label="Search menu items by name or description"
         />
-        {query && (
+        {localQuery && (
           <button
             onClick={handleClear}
             className="absolute right-4 top-1/2 transform -translate-y-1/2

@@ -5,7 +5,6 @@ import SearchBar from '@/components/SearchBar';
 import CategoryNavigation from '@/components/CategoryNavigation';
 import MenuDisplay from '@/components/MenuDisplay';
 import { StorageService } from '@/utils/storage';
-import { debounce } from '@/utils/helpers';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const App: React.FC = () => {
@@ -24,9 +23,6 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Debounced search to avoid excessive API calls
-  const debouncedSetSearchQuery = debounce(setSearchQuery, 300);
-
   // Reset category when location changes
   const handleLocationChange = (locationId: string) => {
     setSelectedLocationId(locationId);
@@ -35,7 +31,7 @@ const App: React.FC = () => {
 
   // Reset category when search is performed
   const handleSearchChange = (query: string) => {
-    debouncedSetSearchQuery(query);
+    setSearchQuery(query);
     if (query.trim()) {
       setSelectedCategory(null);
     }
