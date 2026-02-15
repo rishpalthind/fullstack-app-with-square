@@ -2,7 +2,7 @@
 - [x] Verify that the copilot-instructions.md file in the .github directory is created.
 
 - [x] Clarify Project Requirements
-	<!-- Full-stack TypeScript application with Node.js Express backend, PostgreSQL/Prisma, React frontend, Square API integration -->
+	<!-- Full-stack TypeScript application with Node.js Express backend, In-memory caching, React frontend, Square API integration -->
 
 - [ ] Scaffold the Project
 	<!-- Create project structure with backend and frontend directories -->

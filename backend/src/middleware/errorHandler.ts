@@ -37,12 +37,6 @@ export const errorHandler = (
     message = 'External API Error';
   }
 
-  // Handle database errors
-  if (error.message.includes('Prisma') || error.message.includes('database')) {
-    statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
-    message = 'Database Error';
-  }
-
   // Log error details
   logger.error(`Error ${statusCode}: ${message}`, {
     error: error.message,

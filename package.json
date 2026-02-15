@@ -17,8 +17,6 @@
     "lint": "npm run server:lint && npm run client:lint",
     "server:lint": "cd backend && npm run lint",
     "client:lint": "cd frontend && npm run lint",
-    "prisma:migrate": "cd backend && npm run prisma:migrate",
-    "prisma:generate": "cd backend && npm run prisma:generate",
     "docker:up": "docker-compose up --build",
     "docker:down": "docker-compose down"
   },
@@ -28,9 +26,7 @@
     "square-api",
     "react",
     "nodejs",
-    "typescript",
-    "prisma",
-    "postgresql"
+    "typescript"
   ],
   "author": "",
   "license": "MIT",

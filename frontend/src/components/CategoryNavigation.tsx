@@ -1,10 +1,10 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Hash } from 'lucide-react';
+import { Layers, Pizza, Coffee, Sandwich, Cookie, IceCream, Salad, ChefHat } from 'lucide-react';
 import { ApiService } from '@/services/api';
 import LoadingSkeleton from './LoadingSkeleton';
 import ErrorState from './ErrorState';
-import { clsx, scrollToElement } from '@/utils/helpers';
+import { clsx } from '@/utils/helpers';
 
 interface CategoryNavigationProps {
   locationId: string;
@@ -12,6 +12,19 @@ interface CategoryNavigationProps {
   onCategorySelect: (categoryId: string | null) => void;
   className?: string;
 }
+
+// Map category names to icons
+const getCategoryIcon = (categoryName: string) => {
+  const name = categoryName.toLowerCase();
+  if (name.includes('pizza') || name.includes('pasta')) return Pizza;
+  if (name.includes('drink') || name.includes('beverage')) return Coffee;
+  if (name.includes('sandwich') || name.includes('burger')) return Sandwich;
+  if (name.includes('dessert') || name.includes('cookie')) return Cookie;
+  if (name.includes('ice') || name.includes('frozen')) return IceCream;
+  if (name.includes('salad') || name.includes('appetizer')) return Salad;
+  if (name.includes('bagel')) return Cookie;
+  return ChefHat;
+};
 
 export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
   locationId,
@@ -33,30 +46,25 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
 
   const handleCategoryClick = (categoryId: string) => {
     if (selectedCategory === categoryId) {
-      // Deselect if clicking the same category
       onCategorySelect(null);
     } else {
       onCategorySelect(categoryId);
-      // Scroll to category section
-      scrollToElement(`category-${categoryId}`, 80);
     }
   };
 
   const handleShowAll = () => {
     onCategorySelect(null);
-    scrollToElement('menu-items', 80);
   };
 
   if (isLoading) {
     return (
       <div className={clsx('space-y-2', className)}>
-        <LoadingSkeleton className="w-20 h-8" />
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          {Array.from({ length: 5 }).map((_, i) => (
             <LoadingSkeleton
               key={i}
-              className="flex-shrink-0 w-24 h-10"
-              rounded="full"
+              className="flex-shrink-0 w-20 h-24"
+              rounded="xl"
             />
           ))}
         </div>
@@ -77,73 +85,66 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
   }
 
   if (!categories || categories.length === 0) {
-    return (
-      <div className={clsx('text-center p-4 text-gray-500', className)}>
-        <Hash className="w-6 h-6 mx-auto mb-2" />
-        <p>No categories available</p>
-      </div>
-    );
+    return null;
   }
 
   return (
     <nav 
-      className={clsx('bg-white border-b border-gray-200', className)}
+      className={clsx(className)}
       aria-label="Menu categories"
     >
-      <div className="px-4 py-3">
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">
-          Categories
-        </h2>
+      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+        {/* Show All button */}
+        <button
+          onClick={handleShowAll}
+          className={clsx(
+            'flex-shrink-0 flex flex-col items-center justify-center',
+            'w-20 h-24 rounded-2xl transition-all duration-200',
+            'border-2',
+            !selectedCategory
+              ? 'bg-green-600 dark:bg-green-500 text-white border-green-600 dark:border-green-500 shadow-lg'
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-400'
+          )}
+          aria-pressed={!selectedCategory}
+        >
+          <Layers className={clsx('w-6 h-6 mb-1', !selectedCategory ? 'text-white' : 'text-gray-600 dark:text-gray-400')} />
+          <span className="text-xs font-semibold">All</span>
+        </button>
         
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1">
-          {/* Show All button */}
-          <button
-            onClick={handleShowAll}
-            className={clsx(
-              'flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors',
-              'border border-gray-300',
-              !selectedCategory
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
-            )}
-            aria-pressed={!selectedCategory}
-          >
-            All Items
-          </button>
+        {categories.map((category) => {
+          const Icon = getCategoryIcon(category.name);
+          const isSelected = selectedCategory === category.id;
           
-          {categories.map((category) => (
+          return (
             <button
               key={category.id}
               onClick={() => handleCategoryClick(category.id)}
               className={clsx(
-                'flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors',
-                'border border-gray-300 whitespace-nowrap',
-                selectedCategory === category.id
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
+                'flex-shrink-0 flex flex-col items-center justify-center',
+                'w-20 h-24 rounded-2xl transition-all duration-200',
+                'border-2',
+                isSelected
+                  ? 'bg-green-600 dark:bg-green-500 text-white border-green-600 dark:border-green-500 shadow-lg'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-400'
               )}
-              aria-pressed={selectedCategory === category.id}
+              aria-pressed={isSelected}
             >
-              <span>{category.name}</span>
-              <span className="ml-2 text-xs opacity-75">
-                {category.item_count}
+              <Icon className={clsx('w-6 h-6 mb-1', isSelected ? 'text-white' : 'text-gray-600 dark:text-gray-400')} />
+              <span className="text-xs font-semibold text-center px-1 line-clamp-2">
+                {category.name}
               </span>
+              {category.item_count > 0 && (
+                <span className={clsx(
+                  'mt-0.5 text-[10px] font-medium',
+                  isSelected ? 'text-white/90' : 'text-gray-500 dark:text-gray-400'
+                )}>
+                  {category.item_count}
+                </span>
+              )}
             </button>
-          ))}
-        </div>
+          );
+        })}
       </div>
-      
-      {/* Active category indicator */}
-      {selectedCategory && (
-        <div className="px-4 py-2 bg-blue-50 border-t border-blue-200">
-          <p className="text-sm text-blue-800">
-            Showing items from{' '}
-            <span className="font-medium">
-              {categories.find(cat => cat.id === selectedCategory)?.name}
-            </span>
-          </p>
-        </div>
-      )}
     </nav>
   );
 };

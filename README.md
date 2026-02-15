@@ -22,8 +22,6 @@ npm run docker:up
 The application will be available at:
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:3001
-- Database: PostgreSQL on port 5432
-- Redis: Redis on port 6379
 
 ### Option 2: Local Development
 
@@ -35,14 +33,7 @@ npm install
 cp .env.example .env
 # Edit .env with your Square API credentials
 
-# 3. Start PostgreSQL and Redis (if available)
-# Or update .env to use remote instances
-
-# 4. Set up the database
-npm run prisma:migrate
-npm run prisma:generate
-
-# 5. Start development servers
+# 3. Start development servers
 npm run dev
 ```
 
@@ -50,19 +41,16 @@ npm run dev
 
 ### Required
 - Node.js 18+ and npm
-- PostgreSQL database
 - Square Developer Account with API credentials
 
 ### Optional
 - Docker and Docker Compose (for containerized setup)
-- Redis (for advanced caching)
 
 ## 🏗️ Architecture
 
 ### Backend (`/backend`)
 - **Framework**: Express.js with TypeScript
-- **Database**: PostgreSQL with Prisma ORM
-- **Caching**: In-memory cache (NodeCache) with optional Redis support
+- **Caching**: In-memory cache (NodeCache)
 - **API Integration**: Square Catalog and Locations APIs
 - **Security**: Helmet, CORS, rate limiting
 - **Logging**: Winston with request/response logging
@@ -103,14 +91,12 @@ SQUARE_ENVIRONMENT=sandbox  # or 'production'
 PORT=3001
 CORS_ORIGIN=http://localhost:3000
 
-# Database
-DATABASE_URL=postgresql://postgres:password@localhost:5432/perdiem_db
-
-# Optional: Redis for advanced caching
-REDIS_URL=redis://localhost:6379
-
 # Logging
 LOG_LEVEL=info  # error, warn, info, debug
+
+# Cache Settings (Optional)
+CACHE_TTL=300
+CACHE_MAX_SIZE=100
 ```
 
 ### Square API Setup
@@ -321,7 +307,6 @@ docker-compose down
 - ✅ Rate limiting (100 requests/15min per IP)
 - ✅ Input validation with Zod
 - ✅ Environment variable validation
-- ✅ SQL injection prevention (Prisma)
 
 ### Production Recommendations
 - Use HTTPS in production
@@ -333,11 +318,10 @@ docker-compose down
 ## 📈 Performance Optimizations
 
 ### Backend
-- Efficient SQL queries with Prisma
-- Response caching with TTL
+- Response caching with NodeCache
 - Pagination handling for large datasets
 - Request/response compression
-- Connection pooling
+- Efficient API request batching
 
 ### Frontend
 - Code splitting with Vite
@@ -358,15 +342,7 @@ Error: Failed to fetch locations from Square API
 - Ensure token is for correct environment (sandbox/production)
 - Check Square Developer Dashboard for token status
 
-**2. Database Connection Error**
-```
-Error: Can't reach database server
-```
-- Verify PostgreSQL is running
-- Check `DATABASE_URL` format in `.env`
-- Run `npm run prisma:migrate` to set up schema
-
-**3. Port Already in Use**
+**2. Port Already in Use**
 ```
 Error: EADDRINUSE: address already in use :::3000
 ```
@@ -395,7 +371,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - **Per Diem** for the coding challenge
 - **Square** for the comprehensive API
 - **React Team** for the excellent framework
-- **Prisma Team** for the amazing ORM
 
 ---
 

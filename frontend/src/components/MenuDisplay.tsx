@@ -73,8 +73,8 @@ export const MenuDisplay: React.FC<MenuDisplayProps> = ({
   if (isLoading) {
     return (
       <div className={clsx('space-y-6', className)}>
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
             <CardSkeleton key={i} />
           ))}
         </div>
@@ -95,9 +95,9 @@ export const MenuDisplay: React.FC<MenuDisplayProps> = ({
 
   if (!catalogData || Object.keys(catalogData).length === 0) {
     return (
-      <div className={clsx('text-center py-12', className)}>
-        <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
+      <div className={clsx('text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-sm', className)}>
+        <Package className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
           No menu items available
         </h3>
         <p className="text-gray-500">
@@ -109,12 +109,12 @@ export const MenuDisplay: React.FC<MenuDisplayProps> = ({
 
   if (totalFilteredItems === 0) {
     return (
-      <div className={clsx('text-center py-12', className)}>
-        <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
+      <div className={clsx('text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-sm', className)}>
+        <Package className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
           {hasActiveFilters ? 'No matching items found' : 'No items available'}
         </h3>
-        <p className="text-gray-500">
+        <p className="text-gray-500 dark:text-gray-400">
           {hasActiveFilters
             ? 'Try adjusting your search or category filter.'
             : 'This location doesn\'t have any menu items.'}
@@ -124,12 +124,12 @@ export const MenuDisplay: React.FC<MenuDisplayProps> = ({
   }
 
   return (
-    <div id="menu-items" className={clsx('space-y-8', className)}>
+    <div id="menu-items" className={clsx('space-y-6', className)}>
       {/* Results summary */}
       {hasActiveFilters && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <p className="text-blue-800">
-            Found <span className="font-medium">{totalFilteredItems}</span> item
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-4">
+          <p className="text-green-800 dark:text-green-400 text-sm">
+            Found <span className="font-semibold">{totalFilteredItems}</span> item
             {totalFilteredItems !== 1 ? 's' : ''}
             {!isEmpty(searchQuery) && (
               <span> matching "{searchQuery}"</span>
@@ -149,15 +149,17 @@ export const MenuDisplay: React.FC<MenuDisplayProps> = ({
           className="animate-fade-in"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
               {categoryName}
             </h2>
-            <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+            <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400 
+                           bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full
+                           border border-gray-200 dark:border-gray-700">
               {items.length} item{items.length !== 1 ? 's' : ''}
             </span>
           </div>
           
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {items.map((item) => (
               <MenuItemCard 
                 key={item.id} 

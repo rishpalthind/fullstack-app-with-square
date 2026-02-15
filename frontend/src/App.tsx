@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, MapPin } from 'lucide-react';
+import { Menu, MapPin, Sun, Moon, User } from 'lucide-react';
 import LocationSelector from '@/components/LocationSelector';
 import SearchBar from '@/components/SearchBar';
 import CategoryNavigation from '@/components/CategoryNavigation';
 import MenuDisplay from '@/components/MenuDisplay';
 import { StorageService } from '@/utils/storage';
 import { debounce } from '@/utils/helpers';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const App: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+  
   // State management
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -39,37 +42,76 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-        <div className="container max-w-7xl mx-auto">
-          <div className="flex items-center justify-between py-4">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div className="container max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between py-3 md:py-4">
+            {/* Logo and branding */}
             <div className="flex items-center gap-3">
-              <Menu className="w-8 h-8 text-blue-600" aria-hidden="true" />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">
+              <div className="bg-green-600 dark:bg-green-500 p-2 rounded-full">
+                <Menu className="w-5 h-5 md:w-6 md:h-6 text-white" aria-hidden="true" />
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
                   Per Diem Menu
                 </h1>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
                   Restaurant menu by location
                 </p>
               </div>
             </div>
             
-            {/* Location indicator for mobile */}
-            {selectedLocationId && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 md:hidden">
-                <MapPin className="w-4 h-4" />
-                <span className="truncate max-w-[120px]">
-                  Location selected
-                </span>
-              </div>
-            )}
+            {/* Actions */}
+            <div className="flex items-center gap-2 md:gap-3">
+              {/* Theme toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 
+                         text-gray-600 dark:text-gray-300 transition-colors"
+                aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+              >
+                {theme === 'light' ? (
+                  <Moon className="w-5 h-5" />
+                ) : (
+                  <Sun className="w-5 h-5" />
+                )}
+              </button>
+              
+              {/* User icon */}
+              <button
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 
+                         text-gray-600 dark:text-gray-300 transition-colors"
+                aria-label="User menu"
+              >
+                <User className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="container max-w-7xl mx-auto py-6 space-y-6">
+      <main className="container max-w-7xl mx-auto px-4 py-4 md:py-6 space-y-4 md:space-y-6">
+        {/* Greeting and Location Info */}
+        {selectedLocationId && (
+          <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 
+                        rounded-2xl p-4 md:p-6 shadow-sm border border-green-200 dark:border-green-800">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-green-700 dark:text-green-400 font-medium mb-1">
+                  Welcome back
+                </p>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                  Browse our menu
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  Find your favorite dishes
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {/* Location Selection */}
         <section aria-labelledby="location-heading">
           <h2 id="location-heading" className="sr-only">
@@ -78,7 +120,7 @@ const App: React.FC = () => {
           <LocationSelector
             selectedLocationId={selectedLocationId}
             onLocationChange={handleLocationChange}
-            className="bg-white rounded-lg shadow-sm"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-sm"
           />
         </section>
 
@@ -92,7 +134,6 @@ const App: React.FC = () => {
               <SearchBar
                 query={searchQuery}
                 onQueryChange={handleSearchChange}
-                className="bg-white rounded-lg shadow-sm p-4"
               />
             </section>
 
@@ -100,7 +141,6 @@ const App: React.FC = () => {
               locationId={selectedLocationId}
               selectedCategory={selectedCategory}
               onCategorySelect={setSelectedCategory}
-              className="rounded-lg shadow-sm"
             />
           </>
         )}
@@ -115,16 +155,15 @@ const App: React.FC = () => {
               locationId={selectedLocationId}
               selectedCategory={selectedCategory}
               searchQuery={searchQuery}
-              className="bg-white rounded-lg shadow-sm p-6"
             />
           </section>
         ) : (
-          <div className="text-center py-16 bg-white rounded-lg shadow-sm">
-            <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+          <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-sm">
+            <MapPin className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               Choose a Location
             </h3>
-            <p className="text-gray-500 max-w-md mx-auto">
+            <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
               Select a restaurant location above to view the menu items available at that location.
             </p>
           </div>

@@ -7,14 +7,8 @@ dotenv.config();
 const configSchema = z.object({
   port: z.number().default(3001),
   square: z.object({
-    accessToken: z.string().min(1, 'Square access token is required'),
+    accessToken: z.string().default(''),
     environment: z.enum(['sandbox', 'production']).default('sandbox'),
-  }),
-  database: z.object({
-    url: z.string().url('Invalid database URL'),
-  }),
-  redis: z.object({
-    url: z.string().optional(),
   }),
   cors: z.object({
     origin: z.string().default('http://localhost:3000'),
@@ -34,12 +28,6 @@ const rawConfig = {
   square: {
     accessToken: process.env['SQUARE_ACCESS_TOKEN'] || '',
     environment: (process.env['SQUARE_ENVIRONMENT'] || 'sandbox') as 'sandbox' | 'production',
-  },
-  database: {
-    url: process.env['DATABASE_URL'] || '',
-  },
-  redis: {
-    url: process.env['REDIS_URL'],
   },
   cors: {
     origin: process.env['CORS_ORIGIN'] || 'http://localhost:3000',

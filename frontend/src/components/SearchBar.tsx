@@ -12,7 +12,7 @@ interface SearchBarProps {
 export const SearchBar: React.FC<SearchBarProps> = ({
   query,
   onQueryChange,
-  placeholder = 'Search menu items...',
+  placeholder = 'Search for dishes...',
   className,
 }) => {
   const handleClear = () => {
@@ -26,7 +26,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </label>
       <div className="relative">
         <Search 
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" 
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 
+                   text-gray-400 dark:text-gray-500" 
           aria-hidden="true"
         />
         <input
@@ -35,19 +36,27 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full pl-10 pr-10 py-3 
-                   bg-white border border-gray-300 rounded-lg
-                   text-gray-900 placeholder-gray-500
-                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+          className="w-full pl-12 pr-12 py-3.5 
+                   bg-white dark:bg-gray-800 
+                   border border-gray-200 dark:border-gray-700 
+                   rounded-2xl
+                   text-gray-900 dark:text-white 
+                   placeholder-gray-400 dark:placeholder-gray-500
+                   focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 
+                   focus:border-transparent
+                   shadow-sm
+                   transition-all duration-200
                    text-base"
           aria-label="Search menu items by name or description"
         />
         {query && (
           <button
             onClick={handleClear}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2
-                     p-1 text-gray-400 hover:text-gray-600
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+            className="absolute right-4 top-1/2 transform -translate-y-1/2
+                     p-1.5 text-gray-400 dark:text-gray-500 
+                     hover:text-gray-600 dark:hover:text-gray-300
+                     hover:bg-gray-100 dark:hover:bg-gray-700
+                     focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
                      rounded-full transition-colors"
             aria-label="Clear search"
           >
@@ -55,14 +64,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           </button>
         )}
       </div>
-      
-      {query && (
-        <div className="absolute top-full left-0 right-0 mt-1 p-2 
-                      bg-blue-50 border border-blue-200 rounded-lg
-                      text-sm text-blue-800">
-          Searching for "{query}"
-        </div>
-      )}
     </div>
   );
 };
